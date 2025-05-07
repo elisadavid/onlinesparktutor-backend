@@ -2,7 +2,9 @@ package com.OnlineTutor.tutor.Tutor.Education.subject;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @Entity
 @Table(name = "subject_tb")
 @Data
@@ -17,6 +19,16 @@ public class SubjectModel {
 
     @Column(name = "subjectName")
     private String subjectName;
+
+    public Long getTutorId() {
+        return tutorId;
+    }
+
+    public void setTutorId(Long tutorId) {
+        this.tutorId = tutorId;
+    }
+
+    private Long tutorId;
 
     public Long getSubjectId() {
         return subjectId;

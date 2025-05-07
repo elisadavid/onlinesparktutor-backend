@@ -21,7 +21,7 @@ public class UserModel {
     private String username;
 
     @Column(name = "email")
-    private  String email;
+    private String email;
 
     @Column(name = "password")
     private String password;
@@ -29,26 +29,23 @@ public class UserModel {
     @Column(name = "phn_no")
     private String phn_no;
 
-    @Column(name = "gender")
-    private String gender;
-
-    @Column(name = "DOB")
-    private String DOB;
-
-    @Column(name = "course")
-    private String course;
-
-    @Column(name = "Subj_interest")
-    private String Subj_interest;
-
-    @Column(name = "pref_day")
-    private String pref_day;
-
-    @Column(name = "pref_time")
-    private String pref_time;
-
-    @Column(name = "location")
+    @Column(name = "Location")
     private String location;
+
+//    @Column(name = "subjectId")
+//    private Long subjectId;
+
+    @Column(name = "educationLevelId")
+    private Long educationLevelId;
+
+    @Column(name = "teachingModeId")
+    private Long teachingModeId;
+
+    @Column(name = "weekId")
+    private Long weekId;
+
+    @Column(name = "SpecificGoalId")
+    private Long SpecificGoalId;
 
     public Long getUserId() {
         return userId;
@@ -57,9 +54,6 @@ public class UserModel {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-
-
-
 
     public String getUsername() {
         return username;
@@ -93,54 +87,6 @@ public class UserModel {
         this.phn_no = phn_no;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getDOB() {
-        return DOB;
-    }
-
-    public void setDOB(String DOB) {
-        this.DOB = DOB;
-    }
-
-    public String getCourse() {
-        return course;
-    }
-
-    public void setCourse(String course) {
-        this.course = course;
-    }
-
-    public String getSubj_interest() {
-        return Subj_interest;
-    }
-
-    public void setSubj_interest(String subj_interest) {
-        Subj_interest = subj_interest;
-    }
-
-    public String getPref_day() {
-        return pref_day;
-    }
-
-    public void setPref_day(String pref_day) {
-        this.pref_day = pref_day;
-    }
-
-    public String getPref_time() {
-        return pref_time;
-    }
-
-    public void setPref_time(String pref_time) {
-        this.pref_time = pref_time;
-    }
-
     public String getLocation() {
         return location;
     }
@@ -148,4 +94,41 @@ public class UserModel {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public Long getEducationLevelId() {
+        return educationLevelId;
+    }
+
+    public void setEducationLevelId(Long educationLevelId) {
+        this.educationLevelId = educationLevelId;
+    }
+
+    public Long getTeachingModeId() {
+        return teachingModeId;
+    }
+
+    public void setTeachingModeId(Long teachingModeId) {
+        this.teachingModeId = teachingModeId;
+    }
+
+    public Long getWeekId() {
+        return weekId;
+    }
+
+    public void setWeekId(Long weekId) {
+        this.weekId = weekId;
+    }
+
+    public Long getSpecificGoalId() {
+        return SpecificGoalId;
+    }
+
+    public void setSpecificGoalId(Long specificGoalId) {
+        SpecificGoalId = specificGoalId;
+    }
+//    @Column(name = "paymentId")
+//    private String paymentId;
+
+
 }
+

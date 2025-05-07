@@ -2,7 +2,9 @@ package com.OnlineTutor.tutor.Tutor;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @Entity
 @Table(name = "tutor_tb")
 @Data
@@ -31,15 +33,19 @@ public class TutorModel {
     @Column(name = "qualificationId")
     private Long qualificationId;
 
-    @Column(name = "degree")
-    private String degree;//null
+
+
+
+
+//    @Column(name = "degree")
+//    private String degree;//null
 
     @Column(name = "location")
     private String location;
 
     @Lob
-    @Column(name = "qualification_verification")
-    private byte[] qualification_verification;
+    @Column(name = "qualificationCertificate")
+    private byte[] qualificationCertificate;
 
     @Column(name = "teachingModeId")
     private Long teachingModeId;
@@ -47,9 +53,27 @@ public class TutorModel {
     @Column(name = "statusId")
     private Long statusId;
 
-    public TutorModel(){
-        this.statusId=1L;
+    private Long subjectId;
+//
+    private Long streamId;
+
+    public Long getStreamId() {
+        return streamId;
     }
+
+    public void setStreamId(Long streamId) {
+        this.streamId = streamId;
+    }
+
+
+    public Long getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
+    }
+
     public Long getTutor_id() {
         return tutor_id;
     }
@@ -106,13 +130,6 @@ public class TutorModel {
         this.qualificationId = qualificationId;
     }
 
-    public String getDegree() {
-        return degree;
-    }
-
-    public void setDegree(String degree) {
-        this.degree = degree;
-    }
 
     public String getLocation() {
         return location;
@@ -122,12 +139,12 @@ public class TutorModel {
         this.location = location;
     }
 
-    public byte[] getQualification_verification() {
-        return qualification_verification;
+    public byte[] getQualificationCertificate() {
+        return qualificationCertificate;
     }
 
-    public void setQualification_verification(byte[] qualification_verification) {
-        this.qualification_verification = qualification_verification;
+    public void setQualificationCertificate(byte[] qualificationCertificate) {
+        this.qualificationCertificate = qualificationCertificate;
     }
 
     public Long getTeachingModeId() {
@@ -145,4 +162,11 @@ public class TutorModel {
     public void setStatusId(Long statusId) {
         this.statusId = statusId;
     }
+
+    public TutorModel(){
+        this.statusId=1L;
+    }
+
+
 }
+

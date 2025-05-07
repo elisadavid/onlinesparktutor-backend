@@ -1,25 +1,49 @@
 package com.OnlineTutor.tutor.Tutor;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
 import lombok.Data;
 
-import java.time.LocalTime;
+
 @Data
 public class TutorsearchDto {
 
     private Long subjectId;
     private String subjectName;
 
-    //tmesltmodel
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private Long DayId;
-    private String days;
-    private Long teachingModeId;
-    private String teachingModeName;
 
-    //hrlyremdl
-    private double rate;
+    private  Long tutor_id;
+
+
+    private String name;
+
+
+    private String email;
+
+
+    private String password;
+
+
+    private String phn_no;
+
+
+    private Long genderId;
+
+
+    private Long qualificationId;
+
+
+
     private String location;
+
+
+    private byte[] qualificationCertificate;
+
+
+    private Long teachingModeId;
+
+
+    private Long statusId;
 
     public Long getSubjectId() {
         return subjectId;
@@ -37,36 +61,77 @@ public class TutorsearchDto {
         this.subjectName = subjectName;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
+    public Long getTutor_id() {
+        return tutor_id;
     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
+    public void setTutor_id(Long tutor_id) {
+        this.tutor_id = tutor_id;
     }
 
-    public LocalTime getEndTime() {
-        return endTime;
+    public String getName() {
+        return name;
     }
 
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Long getDayId() {
-        return DayId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setDayId(Long dayId) {
-        DayId = dayId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getDays() {
-        return days;
+    public String getPassword() {
+        return password;
     }
 
-    public void setDays(String days) {
-        this.days = days;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPhn_no() {
+        return phn_no;
+    }
+
+    public void setPhn_no(String phn_no) {
+        this.phn_no = phn_no;
+    }
+
+    public Long getGenderId() {
+        return genderId;
+    }
+
+    public void setGenderId(Long genderId) {
+        this.genderId = genderId;
+    }
+
+    public Long getQualificationId() {
+        return qualificationId;
+    }
+
+    public void setQualificationId(Long qualificationId) {
+        this.qualificationId = qualificationId;
+
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public byte[] getQualificationCertificate() {
+        return qualificationCertificate;
+    }
+
+    public void setQualificationCertificate(byte[] qualificationCertificate) {
+        this.qualificationCertificate = qualificationCertificate;
     }
 
     public Long getTeachingModeId() {
@@ -77,27 +142,11 @@ public class TutorsearchDto {
         this.teachingModeId = teachingModeId;
     }
 
-    public String getTeachingModeName() {
-        return teachingModeName;
+    public Long getStatusId() {
+        return statusId;
     }
 
-    public void setTeachingModeName(String teachingModeName) {
-        this.teachingModeName = teachingModeName;
-    }
-
-    public double getRate() {
-        return rate;
-    }
-
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
     }
 }

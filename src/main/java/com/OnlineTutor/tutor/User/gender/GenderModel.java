@@ -2,7 +2,9 @@ package com.OnlineTutor.tutor.User.gender;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @Entity
 @Table(name = "gender_tb")
 @Data

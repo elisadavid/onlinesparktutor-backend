@@ -2,7 +2,9 @@ package com.OnlineTutor.tutor.Tutor.Education.stream;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @Entity
 @Table(name = "stream_tb")
 @Data

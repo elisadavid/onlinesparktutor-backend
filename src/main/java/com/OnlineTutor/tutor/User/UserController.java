@@ -3,6 +3,7 @@ package com.OnlineTutor.tutor.User;
 import com.OnlineTutor.tutor.Tutor.LoginDto;
 import com.OnlineTutor.tutor.Tutor.TutorModel;
 import com.OnlineTutor.tutor.User.gender.GenderModel;
+import com.OnlineTutor.tutor.User.specificgoal.SpecificgoalModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,5 +104,35 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }return new ResponseEntity<>("Smthng wnt wrng",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    //specific goal
+
+    @PostMapping("/add/specificGoal")
+    public ResponseEntity<?>specificgoal(@RequestBody SpecificgoalModel specificgoalModel){
+        try {
+            return userService.specificagoals(specificgoalModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }return new ResponseEntity<>("Smthng wnt wrng",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/specificGoal/list")
+    public ResponseEntity<List<SpecificgoalModel>> getspecificlist() {
+        return userService.getSpecificgoal();
+    }
+
+    @PutMapping("/update/specificGoal")
+    public ResponseEntity<?> updatespecificgoal(@RequestParam Long specificGoalId, @RequestParam String specificGoal) {
+        try {
+            return userService.updatespecificgoal(specificGoalId,specificGoal);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Smthng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @DeleteMapping("/delete/specificGoal")
+    public ResponseEntity<?>deleteSpecificGoal(@RequestParam long specificGoalId){
+        return userService.deleteSpecificGoal(specificGoalId);
     }
 }

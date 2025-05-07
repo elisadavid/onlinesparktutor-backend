@@ -2,9 +2,10 @@ package com.OnlineTutor.tutor.Tutor.timeSlot;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.time.LocalTime;
-
+@CrossOrigin
 @Entity
 @Table(name = "timeslot_tb")
 @Data

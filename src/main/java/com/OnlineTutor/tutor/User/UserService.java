@@ -1,8 +1,11 @@
 package com.OnlineTutor.tutor.User;
 
+import com.OnlineTutor.tutor.Tutor.Education.EducationRepo;
 import com.OnlineTutor.tutor.Tutor.TutorModel;
 import com.OnlineTutor.tutor.User.gender.GenderModel;
 import com.OnlineTutor.tutor.User.gender.GenderRepo;
+import com.OnlineTutor.tutor.User.specificgoal.SpecificgoalModel;
+import com.OnlineTutor.tutor.User.specificgoal.SpecificgoalRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +20,26 @@ public class UserService {
     private UserRepo userRepo;
     @Autowired
     private GenderRepo genderRepo;
+    @Autowired
+    private SpecificgoalRepo specificgoalRepo;
+    @Autowired
+    private EducationRepo educationRepo;
 
     public ResponseEntity<?> adduser(UserModel userModel) {
+
         UserModel userModel1=new UserModel();
-        userModel1.setUserId(userModel.getUserId());
+//        userModel1.setUserId(userModel.getUserId());
         userModel1.setUsername(userModel.getUsername());
         userModel1.setEmail(userModel.getEmail());
         userModel1.setPassword(userModel.getPassword());
         userModel1.setPhn_no(userModel.getPhn_no());
-//        userModel1.setCourse(userModel.getCourse());
-        userModel1.setDOB(userModel.getDOB());
-//        userModel1.setGender(userModel.getGender());
         userModel1.setLocation(userModel.getLocation());
-//        userModel1.setSubj_interest(userModel.getSubj_interest());
-        userModel1.setPref_day(userModel.getPref_day());
-        userModel1.setPref_time(userModel.getPref_time());
+        userModel1.setTeachingModeId(userModel.getTeachingModeId());
+        userModel1.setWeekId(userModel.getWeekId());
+        userModel1.setEducationLevelId(userModel.getEducationLevelId());
+        userModel1.setSpecificGoalId(userModel.getSpecificGoalId());
+//        userModel1.setSubjectId(userModel.getSubjectId());
+//        userModel1.setPaymentId(userModel.getPaymentId());
         userRepo.save(userModel1);
         return new ResponseEntity<>(userModel1, HttpStatus.OK);
     }
@@ -41,7 +49,7 @@ public class UserService {
         if (optionalUserModel.isPresent()){
             return new ResponseEntity<>("LOGIN SUCCESSFULLY",HttpStatus.OK);
         }else {
-            return new ResponseEntity<>("LOGIN FAILED",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("LOGIN FAILED",HttpStatus.NOT_FOUND);
         }
     }
 
@@ -122,6 +130,43 @@ public class UserService {
     public ResponseEntity<List<UserModel>> getuserlist() {
         List<UserModel> userModel = userRepo.findAll();
         return new ResponseEntity<>(userModel, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> specificagoals(SpecificgoalModel specificgoalModel) {
+        SpecificgoalModel specificgoalModel1=new SpecificgoalModel();
+        specificgoalModel1.setSpecificGoalId(specificgoalModel.getSpecificGoalId());
+        specificgoalModel1.setSpecificGoal(specificgoalModel.getSpecificGoal());
+        specificgoalRepo.save(specificgoalModel1);
+        return new ResponseEntity<>(specificgoalModel1, HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<List<SpecificgoalModel>> getSpecificgoal() {
+        List<SpecificgoalModel>specificgoalModel=specificgoalRepo.findAll();
+        return new ResponseEntity<>(specificgoalModel,HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> updatespecificgoal(Long specificGoalId, String specificGoal) {
+        Optional<SpecificgoalModel>optionalSpecificgoalModel=specificgoalRepo.findById(specificGoalId);
+        if (optionalSpecificgoalModel.isPresent()){
+            SpecificgoalModel specificgoalModel=optionalSpecificgoalModel.get();
+            specificgoalModel.setSpecificGoal(specificGoal);
+            specificgoalRepo.save(specificgoalModel);
+            return new ResponseEntity<>("specificgoal updated",HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("NOT FOUND",HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<?> deleteSpecificGoal(long specificGoalId) {
+        Optional<SpecificgoalModel>optionalSpecificgoalModel=specificgoalRepo.findById(specificGoalId);
+        if (optionalSpecificgoalModel.isPresent()) {
+            SpecificgoalModel specificgoalModel=optionalSpecificgoalModel.get();
+            specificgoalRepo.delete(specificgoalModel);
+            return new ResponseEntity<>("specificgoal deleted",HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("NOT FOUND",HttpStatus.NOT_FOUND);
+        }
     }
 }
 

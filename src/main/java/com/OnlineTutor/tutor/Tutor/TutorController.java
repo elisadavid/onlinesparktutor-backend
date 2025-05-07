@@ -2,6 +2,8 @@ package com.OnlineTutor.tutor.Tutor;
 
 import com.OnlineTutor.tutor.Tutor.Education.EducationDto;
 import com.OnlineTutor.tutor.Tutor.Education.stream.StreamDto;
+import com.OnlineTutor.tutor.Tutor.Education.stream.StreamsubDto;
+import com.OnlineTutor.tutor.Tutor.availablesession.AvailableModel;
 import com.OnlineTutor.tutor.Tutor.dayNames.DayModel;
 import com.OnlineTutor.tutor.Tutor.hourlyrate.HourlyrateDto;
 import com.OnlineTutor.tutor.Tutor.hourlyrate.HourlyrateModel;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,9 +31,9 @@ public class TutorController {
     //tutor registration
 
     @PostMapping("/tutor_reg")
-    public ResponseEntity<?> adduser(@RequestBody TutorModel tutorModel) {
+    public ResponseEntity<?> addtutor(@RequestPart TutorModel tutorModel, @RequestParam MultipartFile qualificationCertificate) {
         try {
-            return tutorService.adduser(tutorModel);
+            return tutorService.addtutor(tutorModel,qualificationCertificate);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,6 +76,9 @@ public class TutorController {
         return tutorService.gettutor();
     }
 
+    @GetMapping("/getTutor/tutorId")
+
+
     //reset tutor password
 
     @PutMapping("/resetpasswordtutor")
@@ -86,32 +92,38 @@ public class TutorController {
 
     // ------------------------------------------------------------------------------------------------------
 
-    @PostMapping("/addhourlyrate")
-    public ResponseEntity<?> addhourlyrate(@RequestBody HourlyrateModel hourlyrateModel) {
-        try {
-            return tutorService.addhourlyrate(hourlyrateModel);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>("Somethng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    @GetMapping("/gethourlyrate")
-    public ResponseEntity<List<HourlyrateModel>> gethourlyrate() {
-        return tutorService.gethourlyrate();
-    }
+//    @PostMapping("/addhourlyrate")
+//    public ResponseEntity<?> addhourlyrate(@RequestBody HourlyrateModel hourlyrateModel) {
+//        try {
+//            return tutorService.addhourlyrate(hourlyrateModel);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return new ResponseEntity<>("Somethng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+//    @GetMapping("/gethourlyrate")
+//    public ResponseEntity<List<HourlyrateModel>> gethourlyrate() {
+//        return tutorService.gethourlyrate();
+//    }
+//
+//    @PutMapping("/updatehourlyrate")
+//    public ResponseEntity<?> updatehourlyrate(@RequestParam Long rate_id, @RequestParam double rate, @RequestParam Long DayId,@RequestParam Long teachingModeId, @RequestParam Long tutorId) {
+//        try {
+//            return tutorService.updatehourlyrate(rate_id, rate,DayId,teachingModeId,tutorId);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return new ResponseEntity<>("Smthng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+//    @DeleteMapping("/delete/rate")
+//    public ResponseEntity<?>deleteRateDetails(@RequestParam Long rate_id){
+//        return tutorService.deleterate(rate_id);
+//    }
 
-    @PutMapping("/updatehourlyrate")
-    public ResponseEntity<?> updatehourlyrate(@RequestParam Long rate_id, @RequestParam double rate, @RequestParam Long DayId,@RequestParam Long teachingModeId, @RequestParam Long tutorId) {
-        try {
-            return tutorService.updatehourlyrate(rate_id, rate,DayId,teachingModeId,tutorId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>("Smthng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    @DeleteMapping("/delete/rate")
-    public ResponseEntity<?>deleteRateDetails(@RequestParam Long rate_id){
-        return tutorService.deleterate(rate_id);
+    @GetMapping("/tutor/profile/{tutorId}")
+    public ResponseEntity<ProfileDto> getTutorProfile(@PathVariable Long tutorId) {
+        ProfileDto profileDto = tutorService.getTutorProfileById(tutorId);
+        return ResponseEntity.ok(profileDto);
     }
 
     @GetMapping("/gethourlyrate/tutorid")
@@ -119,35 +131,73 @@ public class TutorController {
         return tutorService.gethourlyratetutorlist(tutorId);}
 //searchtutor
 
-//    @PostMapping("/searchtutor/service")
-//    public ResponseEntity<?> searchTutors(@RequestBody TutorsearchDto tutorSearchDto) {
-//        List<TutorModel> tutors = tutorService.searchTutors(tutorSearchDto);
+//    @GetMapping("/searchtutor/service")
+//    public ResponseEntity<?> searchTutors(@RequestParam Long subjectId) {
+//        List<TutorsearchDto> tutors = tutorService.searchTutors(subjectId);
 //        if (tutors.isEmpty()) {
-//            return new ResponseEntity<>("No tutors found matching", HttpStatus.NOT_FOUND);
+//            return new ResponseEntity<>("tutors found", HttpStatus.NOT_FOUND);
 //        }
-//        return new ResponseEntity<>("tutors found", HttpStatus.OK);
+//        return new ResponseEntity<>("No tutors found matching", HttpStatus.OK);
 //    }
+    @GetMapping("/searchtutor/service")
+    public ResponseEntity<?> searchTutors(@RequestParam Long subjectId) {
+        List<TutorsearchDto> tutors = tutorService.searchTutors(subjectId);
+
+        if (tutors.isEmpty()) {
+            // Return a "not found" message with a 404 status if no tutors were found
+            return new ResponseEntity<>("No tutors found for the subject ID: " + subjectId, HttpStatus.NOT_FOUND);
+        }
+
+        // Return the list of tutors if found with a 200 OK status
+        return new ResponseEntity<>(tutors, HttpStatus.OK);
+    }
+
 
 //scheduling class
 
-    @PostMapping("/addschedule")
-    public ResponseEntity<?> addscheduling(@RequestBody TimeslotModel timeslotModel) {
-        try {
-            return tutorService.schedule(timeslotModel);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>("SMTHNG WNT WRNG", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @PostMapping("/addschedule")
+//    public ResponseEntity<?> addscheduling(@RequestBody TimeslotModel timeslotModel) {
+//        try {
+//            return tutorService.schedule(timeslotModel);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return new ResponseEntity<>("SMTHNG WNT WRNG", HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+
+//    @GetMapping(path = "/get/timeslot/scheduling/details")
+//    public ResponseEntity<?> getschedulingtimelist(
+//            @RequestParam(required = false) Long tutorId,
+//            @RequestParam(required = false) Long dayId,
+//            @RequestParam(required = false) Long teachingModeId) {
+//        try {
+//            List<TimeslotDto> result = tutorService.getschedulingtimelist(tutorId,Long dayId,teachingModeId);
+//            if (result.isEmpty()) {
+//                return new ResponseEntity<>("No scheduling found", HttpStatus.NOT_FOUND);
+//            }
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Error fetching scheduling", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @GetMapping(path = "/get/timeslot/scheduling/details")
-    public ResponseEntity<List<TimeslotDto>>getschedulingtimelist(){
-        return tutorService.getschedulelist();
+    public ResponseEntity<?> getschedulingtimelist(
+            @RequestParam(required = false) Long tutorId,
+            @RequestParam(required = false) Long dayId
+            ) {
+       try{
+           return tutorService.getDetails(tutorId, dayId);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return new ResponseEntity<>("something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
 
-//qualification
+
+    //qualification
     @PostMapping("/add/qualification")
     public ResponseEntity<?> qualification(@RequestBody QualificationModel qualificationModel) {
         try {
@@ -275,4 +325,92 @@ public class TutorController {
     public ResponseEntity<List<DayModel>> getdayslist() {
         return tutorService.getdayslist();
     }
+
+    @PostMapping("/add/availability")
+    public ResponseEntity<?> addavailability(@RequestBody AvailableModel availableModel) {
+        try {
+            return tutorService.addavailability(availableModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Somethng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @GetMapping("/availability")
+    public ResponseEntity<?> getAllAvailability() {
+        try {
+            return tutorService.getAllAvailability();
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to fetch availability", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // READ ONE
+    @GetMapping("/availability/{id}")
+    public ResponseEntity<?> getAvailabilityById(@PathVariable Long id) {
+        try {
+            return tutorService.getAvailabilityById(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Availability not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // UPDATE
+    @PutMapping("/update/availability/{id}")
+    public ResponseEntity<?> updateAvailability(@PathVariable Long id, @RequestBody AvailableModel updatedModel) {
+        try {
+            return tutorService.updateAvailability(id, updatedModel);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to update availability", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // DELETE
+    @DeleteMapping("/delete/availability/{id}")
+    public ResponseEntity<?> deleteAvailability(@PathVariable Long id) {
+        try {
+            return tutorService.deleteAvailability(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to delete availability", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Endpoint to get stream subjects by tutor
+//    @GetMapping("/getStreamSubDetailsByTutor/{tutorId}")
+//    public ResponseEntity<String> getStreamSubDetailsByTutor(
+//            @PathVariable Long tutorId) {
+//        try {
+//            return (ResponseEntity<String>) tutorService.getStreamSubDetailsByTutor(tutorId);
+//
+//        } catch (Exception e) {
+//           e.printStackTrace();
+//        }
+//        return new ResponseEntity<>("something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+//
+//    }
+
+
+    @GetMapping("/getStreamSubDetailsByTutor/{tutorId}")
+    public ResponseEntity<?> getStreamSubDetailsByTutor(@PathVariable Long tutorId) {
+        try {
+            ResponseEntity<List<StreamsubDto>> response = tutorService.getStreamSubDetailsByTutor(tutorId);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Something went wrong");
+        }
+    }
+
+
+//        List<StreamsubDto> streamsubDtoList = tutorService.getStreamSubDetailsByTutor(tutorId);
+
+//        if (streamsubDtoList == null || streamsubDtoList.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+
+//        return new ResponseEntity<>(streamsubDtoList, HttpStatus.OK);
+
 }
+
+
+

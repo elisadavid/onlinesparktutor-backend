@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
@@ -232,19 +233,26 @@ public class AdminService {
 
 
     public ResponseEntity<List<StreamsubDto>> getstreamsubdetails(Long streamId) {
+        // Fetch subjects where stream_id matches and is not null
         List<SubjectModel> subjectModels = subjectRepo.findByStreamId(streamId);
+
         if (subjectModels == null || subjectModels.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<StreamsubDto> streamsubDtoList = new ArrayList<>();
-        for (SubjectModel subjectModel : subjectModels) {
-            StreamsubDto streamsubDto = new StreamsubDto();
-            streamsubDto.setSubjectId(subjectModel.getSubjectId());
-            streamsubDto.setSubjectName(subjectModel.getSubjectName());
-            streamsubDtoList.add(streamsubDto);
-        }
+
+        List<StreamsubDto> streamsubDtoList = subjectModels.stream()
+                .filter(subject -> subject.getStreamId() != null && subject.getStreamId().equals(streamId)) // extra safety
+                .map(subject -> {
+                    StreamsubDto dto = new StreamsubDto();
+                    dto.setSubjectId(subject.getSubjectId());
+                    dto.setSubjectName(subject.getSubjectName());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
         return new ResponseEntity<>(streamsubDtoList, HttpStatus.OK);
     }
+
 
     public ResponseEntity<List<EducationDto>> geteducationalstream(Long educationlevelId) {
         List<StreamModel> streamModels = streamRepo.findByEducationLevelId(educationlevelId);
@@ -254,6 +262,7 @@ public class AdminService {
         List<EducationDto> educationDtoList = new ArrayList<>();
         for (StreamModel streamModel : streamModels) {
             EducationDto educationDto = new EducationDto();
+            educationDto.setEducationLevelId(streamModel.getEducationLevelId());
             educationDto.setStreamId(streamModel.getStreamId());
             educationDto.setStreamName(streamModel.getStreamName());
             educationDtoList.add(educationDto);
@@ -352,7 +361,7 @@ public class AdminService {
         return new ResponseEntity<>(tutorModel, HttpStatus.OK);
 
     }
-    }
+}
 
 
 

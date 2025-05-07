@@ -2,7 +2,9 @@ package com.OnlineTutor.tutor.Admin;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @Entity
 @Table(name = "admin_tb")
 @Data

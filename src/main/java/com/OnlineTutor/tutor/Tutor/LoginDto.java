@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class LoginDto {
     private String email;
     private String password;
+    private Long tutor_id;
 
     public String getEmail() {
         return email;
@@ -27,7 +28,11 @@ public class LoginDto {
         this.password = password;
     }
 
+    public Long getTutor_id() {
+        return tutor_id;
+    }
 
-
-
+    public void setTutor_id(Long tutor_id) {
+        this.tutor_id = tutor_id;
+    }
 }
