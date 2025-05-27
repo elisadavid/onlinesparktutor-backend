@@ -32,8 +32,8 @@ public class UserModel {
     @Column(name = "Location")
     private String location;
 
-//    @Column(name = "subjectId")
-//    private Long subjectId;
+    @Column(name = "subjectId")
+    private Long subjectId;
 
     @Column(name = "educationLevelId")
     private Long educationLevelId;
@@ -46,6 +46,36 @@ public class UserModel {
 
     @Column(name = "SpecificGoalId")
     private Long SpecificGoalId;
+
+    private Long tutorId;
+    private Long streamId;
+
+    public Long getTutorId() {
+        return tutorId;
+    }
+
+    public void setTutorId(Long tutorId) {
+        this.tutorId = tutorId;
+    }
+
+    public Long getStreamId() {
+        return streamId;
+    }
+
+    public void setStreamId(Long streamId) {
+        this.streamId = streamId;
+    }
+
+
+
+    public Long getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
+    }
+
 
     public Long getUserId() {
         return userId;

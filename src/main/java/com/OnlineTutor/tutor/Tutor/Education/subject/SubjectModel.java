@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class SubjectModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "subjectId")
     private Long subjectId;
 
@@ -20,6 +21,8 @@ public class SubjectModel {
     @Column(name = "subjectName")
     private String subjectName;
 
+    private Long tutorId;
+
     public Long getTutorId() {
         return tutorId;
     }
@@ -27,8 +30,6 @@ public class SubjectModel {
     public void setTutorId(Long tutorId) {
         this.tutorId = tutorId;
     }
-
-    private Long tutorId;
 
     public Long getSubjectId() {
         return subjectId;

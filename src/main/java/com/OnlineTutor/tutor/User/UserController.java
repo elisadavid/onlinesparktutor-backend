@@ -1,5 +1,6 @@
 package com.OnlineTutor.tutor.User;
 
+import com.OnlineTutor.tutor.Tutor.Education.stream.StreamsubDto;
 import com.OnlineTutor.tutor.Tutor.LoginDto;
 import com.OnlineTutor.tutor.Tutor.TutorModel;
 import com.OnlineTutor.tutor.User.gender.GenderModel;
@@ -135,4 +136,22 @@ public class UserController {
     public ResponseEntity<?>deleteSpecificGoal(@RequestParam long specificGoalId){
         return userService.deleteSpecificGoal(specificGoalId);
     }
+
+//    @GetMapping("/users/stream/{streamId}")
+//    public ResponseEntity<?> getUsersByStreamId(@RequestParam Long streamId) {
+//        List<UserModel> userModelList = userRepo.findById(streamId);
+//        if (!userModelList.isEmpty()) {
+//            return new ResponseEntity<>(userModelList, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>("No users found for streamId: " + streamId, HttpStatus.NOT_FOUND);
+//        }
+//    }
+           @GetMapping("/users/stream")
+        public ResponseEntity<?> getUsersByStreamId(@RequestParam Long streamId, @RequestParam Long tutorId) {
+    try {
+        return userService.getUsersByStreamId(streamId,tutorId);
+    } catch (Exception e) {
+        return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
+    }
 }
+       }

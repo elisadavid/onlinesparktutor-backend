@@ -374,32 +374,19 @@ public class TutorController {
         }
     }
 
-    // Endpoint to get stream subjects by tutor
-//    @GetMapping("/getStreamSubDetailsByTutor/{tutorId}")
-//    public ResponseEntity<String> getStreamSubDetailsByTutor(
-//            @PathVariable Long tutorId) {
-//        try {
-//            return (ResponseEntity<String>) tutorService.getStreamSubDetailsByTutor(tutorId);
-//
-//        } catch (Exception e) {
-//           e.printStackTrace();
-//        }
-//        return new ResponseEntity<>("something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
-//
-//    }
 
 
     @GetMapping("/getStreamSubDetailsByTutor/{tutorId}")
     public ResponseEntity<?> getStreamSubDetailsByTutor(@PathVariable Long tutorId) {
         try {
-            ResponseEntity<List<StreamsubDto>> response = tutorService.getStreamSubDetailsByTutor(tutorId);
-            return response;
+            return tutorService.getStreamSubDetailsByTutor(tutorId);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Something went wrong");
         }
     }
+
 
 
 //        List<StreamsubDto> streamsubDtoList = tutorService.getStreamSubDetailsByTutor(tutorId);

@@ -21,6 +21,16 @@ public class StreamModel {
     @Column(name = "educationLevelId")
     private Long educationLevelId;
 
+    private Long tutorId;
+
+    public Long getTutorId() {
+        return tutorId;
+    }
+
+    public void setTutorId(Long tutorId) {
+        this.tutorId = tutorId;
+    }
+
     public Long getStreamId() {
         return streamId;
     }

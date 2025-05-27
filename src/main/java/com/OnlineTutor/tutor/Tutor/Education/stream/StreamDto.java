@@ -8,6 +8,17 @@ public class StreamDto {
     private String streamName;
     private Long educationLevelId;
     private String educationLevel;
+    private Long tutorId;
+
+    public Long getTutorId() {
+        return tutorId;
+    }
+
+    public void setTutorId(Long tutorId) {
+        this.tutorId = tutorId;
+    }
+
+
 
     public String getEducationLevel() {
         return educationLevel;

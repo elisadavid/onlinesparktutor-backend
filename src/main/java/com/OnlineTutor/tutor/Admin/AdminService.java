@@ -14,6 +14,10 @@ import com.OnlineTutor.tutor.Admin.status.StatusModel;
 import com.OnlineTutor.tutor.Admin.status.StatusRepo;
 import com.OnlineTutor.tutor.Tutor.TutorModel;
 import com.OnlineTutor.tutor.Tutor.TutorRepo;
+import com.OnlineTutor.tutor.User.BookingSession.BookingModel;
+import com.OnlineTutor.tutor.User.BookingSession.BookingRepo;
+import com.OnlineTutor.tutor.User.UserModel;
+import com.OnlineTutor.tutor.User.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +42,10 @@ public class AdminService {
     private StatusRepo statusRepo;
     @Autowired
     private TutorRepo tutorRepo;
+    @Autowired
+    private UserRepo userRepo;
+    @Autowired
+    private BookingRepo bookingRepo;
 
 
     public ResponseEntity<?> register(AdminModel adminModel) {
@@ -338,23 +346,55 @@ public class AdminService {
 
     }
 
-    public ResponseEntity<?> updatetutorStatus(Long tutorId, Long statusId) {
-        Optional<TutorModel> optionalTutorModel = tutorRepo.findById(tutorId);
-        if (optionalTutorModel.isPresent()) {
-            Optional<StatusModel> optionalStatusModel = statusRepo.findById(statusId);
-            if (optionalStatusModel.isPresent()) {
-                TutorModel tutorModel = optionalTutorModel.get();
-                StatusModel statusModel = optionalStatusModel.get();
-                tutorModel.setStatusId(statusId);
-                tutorRepo.save(tutorModel);
-                return new ResponseEntity<>(tutorModel,HttpStatus.OK);
-            }
-            else
-                return new ResponseEntity<>("status id is not presented",HttpStatus.NOT_FOUND);
+//    public ResponseEntity<?> updatetutorStatus(Long tutorId, Long statusId, Long userId) {
+//        Optional<UserModel> optionalUserModel = userRepo.findById(userId);
+//        if (optionalUserModel.isPresent()) {
+//            Optional<StatusModel> optionalStatusModel = statusRepo.findById(statusId);
+//            if (optionalStatusModel.isPresent()) {
+//                UserModel userModel = optionalUserModel.get();
+//                StatusModel statusModel = optionalStatusModel.get();
+//                tutorModel.setStatusId(statusId);
+//                tutorRepo.save(tutorModel);
+//                return new ResponseEntity<>(tutorModel,HttpStatus.OK);
+//            }
+//            else
+//                return new ResponseEntity<>("status id is not presented",HttpStatus.NOT_FOUND);
+//
+//        }
+//        return new ResponseEntity<>("tutorid is not presented",HttpStatus.NOT_FOUND);
+//    }
 
+    public ResponseEntity<?> updatetutorStatus(Long bookingId, Long statusId) {
+        Optional<BookingModel> optionalBooking = bookingRepo.findById(bookingId);
+        if (optionalBooking.isEmpty()) {
+            return new ResponseEntity<>("Booking ID not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>("tutorid is not presented",HttpStatus.NOT_FOUND);
+
+        Optional<StatusModel> optionalStatus = statusRepo.findById(statusId);
+        if (optionalStatus.isEmpty()) {
+            return new ResponseEntity<>("Status ID not found", HttpStatus.NOT_FOUND);
+        }
+
+        BookingModel booking = optionalBooking.get();
+        booking.setStatusId(statusId);  // or booking.setStatus(optionalStatus.get());
+        bookingRepo.save(booking);
+
+        // If status is Approved (let's say statusId = 2), update tutorId in UserModel
+        if (statusId == 3) { // assuming 2 is Approved
+            Long userId = booking.getUserId();
+            Long tutorId = booking.getTutorId();
+
+            Optional<UserModel> optionalUser = userRepo.findById(userId);
+            if (optionalUser.isPresent()) {
+                UserModel user = optionalUser.get();
+                user.setTutorId(tutorId);
+                userRepo.save(user);
+            }
+        }
+
+        return new ResponseEntity<>("Booking status updated successfully", HttpStatus.OK);
     }
+
 
     public ResponseEntity<List<TutorModel>> gettutorlist() {
         List<TutorModel> tutorModel = tutorRepo.findAll();

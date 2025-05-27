@@ -15,7 +15,7 @@ public class GenderModel {
     @Column(name = "Gender_id")
     private Long genderId;
 
-    @Column(name = "Gender_type")
+    @Column(name = "GenderType")
     private String genderType;
 
     public Long getGenderId() {

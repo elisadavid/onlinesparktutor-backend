@@ -6,6 +6,18 @@ public class SubjectDto {
     private String streamName;
     private String subjectName;
 
+    private Long tutorId;
+
+    public Long getTutorId() {
+        return tutorId;
+    }
+
+    public void setTutorId(Long tutorId) {
+        this.tutorId = tutorId;
+    }
+
+
+
     public Long getSubjectId() {
         return subjectId;
     }

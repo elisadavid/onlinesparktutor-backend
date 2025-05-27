@@ -1,7 +1,10 @@
 package com.OnlineTutor.tutor.User;
 
 import com.OnlineTutor.tutor.Tutor.Education.EducationRepo;
+import com.OnlineTutor.tutor.Tutor.Education.stream.StreamRepo;
 import com.OnlineTutor.tutor.Tutor.TutorModel;
+import com.OnlineTutor.tutor.Tutor.TutorRepo;
+import com.OnlineTutor.tutor.Tutor.availablesession.AvailableModel;
 import com.OnlineTutor.tutor.User.gender.GenderModel;
 import com.OnlineTutor.tutor.User.gender.GenderRepo;
 import com.OnlineTutor.tutor.User.specificgoal.SpecificgoalModel;
@@ -24,6 +27,10 @@ public class UserService {
     private SpecificgoalRepo specificgoalRepo;
     @Autowired
     private EducationRepo educationRepo;
+    @Autowired
+    private StreamRepo streamRepo;
+    @Autowired
+    private TutorRepo tutorRepo;
 
     public ResponseEntity<?> adduser(UserModel userModel) {
 
@@ -38,7 +45,9 @@ public class UserService {
         userModel1.setWeekId(userModel.getWeekId());
         userModel1.setEducationLevelId(userModel.getEducationLevelId());
         userModel1.setSpecificGoalId(userModel.getSpecificGoalId());
-//        userModel1.setSubjectId(userModel.getSubjectId());
+        userModel1.setSubjectId(userModel.getSubjectId());
+        userModel1.setStreamId(userModel.getStreamId());
+        userModel1.setTutorId(userModel.getTutorId());
 //        userModel1.setPaymentId(userModel.getPaymentId());
         userRepo.save(userModel1);
         return new ResponseEntity<>(userModel1, HttpStatus.OK);
@@ -168,6 +177,17 @@ public class UserService {
             return new ResponseEntity<>("NOT FOUND",HttpStatus.NOT_FOUND);
         }
     }
+
+    public ResponseEntity<?> getUsersByStreamId(Long streamId , Long tutorId) {
+        List<UserModel> users = userRepo.findByStreamIdAndTutorId(streamId,tutorId);
+        if (!users.isEmpty()) {
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No users found for stream ID: " + streamId, HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
+
 
 

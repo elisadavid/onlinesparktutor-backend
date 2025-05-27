@@ -81,6 +81,11 @@ public class TutorService {
         tutorModel1.setQualificationCertificate(qualificationCertificate.getBytes());
         tutorModel1.setSubjectId(tutorModel.getSubjectId());
         tutorModel1.setStreamId(tutorModel.getStreamId());
+        tutorModel1.setRating(tutorModel.getRating());
+        tutorModel1.setQualification(tutorModel.getQualification());
+        tutorModel1.setExperience(tutorModel.getExperience());
+        tutorModel1.setStreamName(tutorModel.getStreamName());
+        tutorModel1.setSubjectName(tutorModel.getSubjectName());
 
         tutorRepo.save(tutorModel1);
         return new ResponseEntity<>(tutorModel1, HttpStatus.OK);
@@ -596,15 +601,6 @@ public ProfileDto getTutorProfileById(Long tutorId) {
         );
     }
 
-    // Add other optional fields like stream, education level if needed
-    // Example:
-    // Long streamId = tutorModel.getStreamId();
-    // if (streamId != null) {
-    //     streamRepo.findById(streamId).ifPresent(stream ->
-    //         profileDto.setStream(stream.getStreamName())
-    //     );
-    // }
-
     return profileDto;
 }
 
@@ -682,24 +678,31 @@ public ResponseEntity<?> getAllAvailability() {
 //    }
 
     public ResponseEntity<List<StreamsubDto>> getStreamSubDetailsByTutor(Long tutorId) {
-        List<SubjectModel> subjectModels = subjectRepo.findByTutorId(tutorId);
+        List<TutorModel> tutorModelList = tutorRepo.findByTutorId(tutorId);
 
         List<StreamsubDto> streamsubDtoList = new ArrayList<>();
-        for (SubjectModel subjectModel : subjectModels) {
+        for (TutorModel tutorModel : tutorModelList) {
             StreamsubDto dto = new StreamsubDto();
-            dto.setSubjectId(subjectModel.getSubjectId());
-            dto.setSubjectName(subjectModel.getSubjectName());
-            dto.setStreamId(subjectModel.getStreamId());
+            dto.setSubjectId(tutorModel.getSubjectId());
 
-            // If needed, you can add stream name like this:
+            dto.setStreamId(tutorModel.getStreamId());
+            dto.setTutorId(tutorId);
+
+            SubjectModel subjectModel = subjectRepo.findById(tutorModel.getSubjectId()).orElse(null);
+            if (subjectModel != null) {
+                dto.setSubjectName(subjectModel.getSubjectName());
+            } else {
+                dto.setSubjectName("Unknown Subject");
+            }
+            // Optional: If you have streamName via relation
             // dto.setStreamName(subjectModel.getStream().getStreamName());
 
-            dto.setTutorId(tutorId);
             streamsubDtoList.add(dto);
         }
 
-        return ResponseEntity.ok(streamsubDtoList); // ✅ wrap and return
+        return ResponseEntity.ok(streamsubDtoList);
     }
+
 
 
     public ResponseEntity<?> getDetails(Long tutorId, Long dayId) {

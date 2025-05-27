@@ -14,5 +14,5 @@ public interface SubjectRepo extends JpaRepository<SubjectModel,Long> {
 
 //    List<SubjectModel> findByTutorIdAndStreamId(Long tutorId, Long streamId);
 
-    List<SubjectModel> findByTutorId(Long tutorId);
+//    List<SubjectModel> findByTutorId(Long tutorId);
 }

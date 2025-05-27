@@ -30,9 +30,17 @@ public class TutorModel {
     @Column(name = "genderId")
     private Long genderId;
 
+    @Column (name = "genderType")
+    private String genderType;
+
     @Column(name = "qualificationId")
     private Long qualificationId;
 
+    @Column(name = "qualification")
+    private String qualification;
+
+    @Column(name = "Experience")
+    private Long Experience;
 
 
 
@@ -54,8 +62,64 @@ public class TutorModel {
     private Long statusId;
 
     private Long subjectId;
+    @Column(name = "subjectName")
+    private String subjectName;
 //
     private Long streamId;
+
+    @Column(name = "streamName")
+    private String streamName;
+
+    @Column(name = "Rating")
+    private Long Rating;
+
+    public String getGenderType() {
+        return genderType;
+    }
+
+    public void setGenderType(String genderType) {
+        this.genderType = genderType;
+    }
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
+    }
+
+    public Long getExperience() {
+        return Experience;
+    }
+
+    public void setExperience(Long experience) {
+        Experience = experience;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getStreamName() {
+        return streamName;
+    }
+
+    public void setStreamName(String streamName) {
+        this.streamName = streamName;
+    }
+
+    public Long getRating() {
+        return Rating;
+    }
+
+    public void setRating(Long rating) {
+        Rating = rating;
+    }
 
     public Long getStreamId() {
         return streamId;
