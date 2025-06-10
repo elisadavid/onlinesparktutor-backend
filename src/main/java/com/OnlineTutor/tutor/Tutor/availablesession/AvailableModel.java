@@ -43,6 +43,24 @@ public class AvailableModel {
     private Long streamId;
     private Long tutorId;
     private Long dayId;
+    private String experience;
+    private String location;
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public Long getDayId() {
         return dayId;

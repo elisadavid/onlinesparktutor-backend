@@ -20,39 +20,50 @@ public class BookingController {
     // Create a new booking session
     @PostMapping("/create")
     public ResponseEntity<?> createBookingSession(@RequestBody BookingModel bookingModel) {
+        System.out.println("Received booking: " + bookingModel);
         try {
             BookingModel savedBooking = bookingService.create(bookingModel);
             return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Something went wrong while creating booking.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Invalid request or something went wrong while creating booking.", HttpStatus.BAD_REQUEST);
         }
     }
 
-    // Get bookings by tutorId
+
+
     @GetMapping("/tutor/{tutorId}")
-    public ResponseEntity<List<BookingModel>> getTutorBookings(@RequestParam Long tutorId) {
+    public ResponseEntity<List<BookingModel>> getTutorBookings(@PathVariable Long tutorId) {
         List<BookingModel> bookings = bookingService.getTutorBookings(tutorId);
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
-    // Get bookings by userId
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<BookingModel>> getUserBookings(@RequestParam Long userId) {
+    public ResponseEntity<List<BookingModel>> getUserBookings(@PathVariable Long userId) {
         List<BookingModel> bookings = bookingService.getUserBookings(userId);
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
-    // Cancel booking by bookingId
     @DeleteMapping("/cancel/{bookingId}")
-    public ResponseEntity<String> cancelBooking(@RequestParam Long bookingId) {
+    public ResponseEntity<String> cancelBooking(@PathVariable Long bookingId) {
         try {
             bookingService.cancelBooking(bookingId);
             return new ResponseEntity<>("Booking cancelled successfully.", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Booking cancellation failed.", HttpStatus.NOT_FOUND);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/confirm/{bookingId}")
+    public ResponseEntity<String> confirmBooking(@PathVariable Long bookingId) {
+        try {
+            bookingService.confirmBooking(bookingId);
+            return new ResponseEntity<>("Booking confirmed successfully.", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
+
 
 

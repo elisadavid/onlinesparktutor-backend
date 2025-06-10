@@ -197,26 +197,75 @@ public class AdminService {
         }
     }
 
-    public ResponseEntity<List<StreamDto>> getStreamFullDetails() {
-        List<StreamDto> streamDtoList = new ArrayList<>();
-        List<StreamModel> streamModelList = streamRepo.findAll();
-        if (!streamModelList.isEmpty()) {
-            for (StreamModel streamModel : streamModelList) {
-                StreamDto streamDto = new StreamDto();
-                streamDto.setStreamId(streamModel.getStreamId());
-                streamDto.setStreamName(streamModel.getStreamName());
-                streamDto.setEducationLevelId(streamModel.getEducationLevelId());
-                Optional<EducationModel> optionalEducationModel = educationRepo.findById(streamModel.getEducationLevelId());
-                if (optionalEducationModel.isPresent()) {
-                    EducationModel educationModel = optionalEducationModel.get();
-                    streamDto.setEducationLevel(educationModel.getEducationLevel());
-                }
-                streamDtoList.add(streamDto);
-            }
-            return new ResponseEntity<>(streamDtoList, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
-    }
+//    public ResponseEntity<List<StreamDto>> getStreamFullDetails() {
+//        List<StreamDto> streamDtoList = new ArrayList<>();
+//        List<StreamModel> streamModelList = streamRepo.findAll();
+//        if (!streamModelList.isEmpty()) {
+//            for (StreamModel streamModel : streamModelList) {
+//                StreamDto streamDto = new StreamDto();
+//                streamDto.setStreamId(streamModel.getStreamId());
+//                streamDto.setStreamName(streamModel.getStreamName());
+//                streamDto.setEducationLevelId(streamModel.getEducationLevelId());
+//                streamDto.setSubjectName(streamModel.getSubjectName());
+//                Optional<EducationModel> optionalEducationModel = educationRepo.findById(streamModel.getEducationLevelId());
+//                if (optionalEducationModel.isPresent()) {
+//                    EducationModel educationModel = optionalEducationModel.get();
+//                    streamDto.setEducationLevel(educationModel.getEducationLevel());
+//                }
+//
+//                Optional<SubjectModel> optionalSubjectModel = subjectRepo.findById(streamModel.getSubjectId());
+//                if (optionalSubjectModel.isPresent()) {
+//                    SubjectModel subjectModel = optionalSubjectModel.get();
+//                    streamDto.setSubjectName(subjectModel.getSubjectName());
+//                }
+//                streamDtoList.add(streamDto);
+//            }
+//            return new ResponseEntity<>(streamDtoList, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+//    }
+
+//    public ResponseEntity<List<StreamDto>> getStreamFullDetails() {
+//        List<StreamDto> streamDtoList = new ArrayList<>();
+//        List<StreamModel> streamModelList = streamRepo.findAll();
+//
+//        for (StreamModel streamModel : streamModelList) {
+//            StreamDto streamDto = new StreamDto();
+//            streamDto.setStreamId(streamModel.getStreamId());
+//            streamDto.setStreamName(streamModel.getStreamName());
+//            streamDto.setEducationLevelId(streamModel.getEducationLevelId());
+//
+//            // Set education level name
+//            educationRepo.findById(streamModel.getEducationLevelId())
+//                    .ifPresent(edu -> streamDto.setEducationLevel(edu.getEducationLevel()));
+//
+//            List<String> subjectName = new ArrayList<>();
+//            List<String> name = new ArrayList<>();
+//
+//            // Get subjects for this stream
+//            List<SubjectModel> subjectList = subjectRepo.findByStreamId(streamModel.getStreamId());
+//            for (SubjectModel subject : subjectList) {
+//                subjectName.add(subject.getSubjectName());
+//
+//                // Get tutors for this subject
+//                List<TutorModel> tutorList = tutorRepo.findBySubjectId(subject.getSubjectId());
+//                for (TutorModel tutor : tutorList) {
+//                    if (!name.contains(tutor.getName())) {
+//                        name.add(tutor.getName());
+//                    }
+//                }
+//            }
+//
+//            streamDto.setsubjectName(subjectName);
+//            streamDto.setname(name);
+//
+//            streamDtoList.add(streamDto);
+//        }
+//
+//        return new ResponseEntity<>(streamDtoList, HttpStatus.OK);
+//    }
+
+
 
     public ResponseEntity<List<SubjectDto>> getsubjectdetails() {
         List<SubjectDto> subjectDtoList = new ArrayList<>();
@@ -401,6 +450,53 @@ public class AdminService {
         return new ResponseEntity<>(tutorModel, HttpStatus.OK);
 
     }
+
+    public ResponseEntity<StreamDto> getStreamDetailsById(Long streamId) {
+        Optional<StreamModel> streamOpt = streamRepo.findById(streamId);
+        if (streamOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        StreamModel streamModel = streamOpt.get();
+        StreamDto streamDto = new StreamDto();
+
+        streamDto.setStreamId(streamModel.getStreamId());
+        streamDto.setStreamName(streamModel.getStreamName());
+        streamDto.setEducationLevelId(streamModel.getEducationLevelId());
+
+        // Get education level name
+        educationRepo.findById(streamModel.getEducationLevelId())
+                .ifPresent(edu -> streamDto.setEducationLevel(edu.getEducationLevel()));
+
+        List<String> subjectNames = new ArrayList<>();
+        List<String> tutorDisplayNames = new ArrayList<>();
+
+        // Get all subjects for the stream
+        List<SubjectModel> subjectList = subjectRepo.findByStreamId(streamId);
+        for (SubjectModel subject : subjectList) {
+            subjectNames.add(subject.getSubjectName());
+
+            List<TutorModel> tutors = tutorRepo.findBySubjectId(subject.getSubjectId());
+            for (TutorModel tutor : tutors) {
+                Integer studentCount = userRepo.countStudentsByTutorId(tutor.getTutor_id());
+                if (studentCount == null) studentCount = 0;
+
+                String displayName = tutor.getName() + " (" + studentCount + " students)";
+
+                if (!tutorDisplayNames.contains(displayName)) {
+                    tutorDisplayNames.add(displayName);
+                }
+            }
+        }
+
+
+
+        streamDto.setSubjectName(subjectNames);
+        streamDto.setName(tutorDisplayNames); // This contains tutor name + student count
+
+        return new ResponseEntity<>(streamDto, HttpStatus.OK);
+    }
+
 }
 
 

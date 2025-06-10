@@ -2,6 +2,7 @@ package com.OnlineTutor.tutor.Tutor;
 
 import com.OnlineTutor.tutor.Tutor.Education.EducationDto;
 import com.OnlineTutor.tutor.Tutor.Education.stream.StreamDto;
+import com.OnlineTutor.tutor.Tutor.Education.stream.StreamModel;
 import com.OnlineTutor.tutor.Tutor.Education.stream.StreamsubDto;
 import com.OnlineTutor.tutor.Tutor.availablesession.AvailableModel;
 import com.OnlineTutor.tutor.Tutor.dayNames.DayModel;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/tutor")
-@CrossOrigin
+@CrossOrigin (origins = "http://localhost:8080")
 public class TutorController {
     @Autowired
     private TutorService tutorService;
@@ -33,7 +34,7 @@ public class TutorController {
     @PostMapping("/tutor_reg")
     public ResponseEntity<?> addtutor(@RequestPart TutorModel tutorModel, @RequestParam MultipartFile qualificationCertificate) {
         try {
-            return tutorService.addtutor(tutorModel,qualificationCertificate);
+            return tutorService.addtutor(tutorModel, qualificationCertificate);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,15 +58,15 @@ public class TutorController {
     @PutMapping("/updatetutor")
     public ResponseEntity<?> updatetutor(@RequestParam String email, @RequestParam String password) {
         try {
-            return tutorService.updatetutors(email,password);
+            return tutorService.updatetutors(email, password);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<>("Smthng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @DeleteMapping("/delete/tutor")
-    public ResponseEntity<?>deletetutor(@RequestParam Long tutorId){
+    @DeleteMapping("/delete/{tutorId}")
+    public ResponseEntity<?> deletetutor(@PathVariable Long tutorId) {
         return tutorService.deletetutor(tutorId);
     }
 
@@ -82,13 +83,29 @@ public class TutorController {
     //reset tutor password
 
     @PutMapping("/resetpasswordtutor")
-    public ResponseEntity<?>rstpasstutor(@RequestParam String email,@RequestParam String password){
+    public ResponseEntity<?> rstpasstutor(@RequestParam String email, @RequestParam String password) {
         try {
-            return tutorService.resetuserpassword(email,password);
+            return tutorService.resetuserpassword(email, password);
         } catch (Exception e) {
             e.printStackTrace();
-        }return new ResponseEntity<>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+
+//     updation profile
+
+    @PutMapping("/update/profile/{tutorId}")
+    public ResponseEntity<String> updateProfile(@PathVariable Long tutorId, @RequestBody ProfileDto dto) {
+        boolean updated = tutorService.updateTutorProfile(tutorId, dto);
+        if (updated) {
+            return ResponseEntity.ok("Tutor profile updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tutor not found");
+        }
+    }
+
 
     // ------------------------------------------------------------------------------------------------------
 
@@ -120,6 +137,8 @@ public class TutorController {
 //        return tutorService.deleterate(rate_id);
 //    }
 
+  //fetchProfile
+
     @GetMapping("/tutor/profile/{tutorId}")
     public ResponseEntity<ProfileDto> getTutorProfile(@PathVariable Long tutorId) {
         ProfileDto profileDto = tutorService.getTutorProfileById(tutorId);
@@ -127,11 +146,12 @@ public class TutorController {
     }
 
     @GetMapping("/gethourlyrate/tutorid")
-    public ResponseEntity<List<HourlyrateDto>>gethourlyratebytutorid(@RequestParam Long tutorId){
-        return tutorService.gethourlyratetutorlist(tutorId);}
+    public ResponseEntity<List<HourlyrateDto>> gethourlyratebytutorid(@RequestParam Long tutorId) {
+        return tutorService.gethourlyratetutorlist(tutorId);
+    }
 //searchtutor
 
-//    @GetMapping("/searchtutor/service")
+    //    @GetMapping("/searchtutor/service")
 //    public ResponseEntity<?> searchTutors(@RequestParam Long subjectId) {
 //        List<TutorsearchDto> tutors = tutorService.searchTutors(subjectId);
 //        if (tutors.isEmpty()) {
@@ -181,20 +201,20 @@ public class TutorController {
 //        }
 //    }
 
+
+//fetch schedules ................................................................
     @GetMapping(path = "/get/timeslot/scheduling/details")
     public ResponseEntity<?> getschedulingtimelist(
             @RequestParam(required = false) Long tutorId,
             @RequestParam(required = false) Long dayId
-            ) {
-       try{
-           return tutorService.getDetails(tutorId, dayId);
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-       return new ResponseEntity<>("something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+    ) {
+        try {
+            return tutorService.getDetails(tutorId, dayId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
 
 
     //qualification
@@ -207,6 +227,7 @@ public class TutorController {
         }
         return new ResponseEntity<>("Smthng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     @GetMapping("/get/qualification")
     public ResponseEntity<List<QualificationModel>> getqualificationlist() {
         return tutorService.getqualification();
@@ -223,7 +244,7 @@ public class TutorController {
     }
 
     @DeleteMapping("/deletequalification")
-    public ResponseEntity<?>deletequal(@RequestParam long qualificationId){
+    public ResponseEntity<?> deletequal(@RequestParam long qualificationId) {
         return tutorService.deletequal(qualificationId);
     }
 
@@ -238,6 +259,7 @@ public class TutorController {
         }
         return new ResponseEntity<>("smthng wnt wrong", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     @GetMapping("/teachinglist")
     public ResponseEntity<List<TeachingmodeModel>> getteachinglist() {
         return tutorService.getteachinglist();
@@ -246,21 +268,22 @@ public class TutorController {
     @PutMapping("/updateteachingmode")
     public ResponseEntity<?> updateteachngmode(@RequestParam Long teachingModeId, @RequestParam String teachingMode) {
         try {
-            return tutorService.updateteaching(teachingModeId,teachingMode);
+            return tutorService.updateteaching(teachingModeId, teachingMode);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<>("Smthng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     @DeleteMapping("/deleteteachingmode")
-    public ResponseEntity<?>deleteteachingmode(@RequestParam long teachingModeId){
+    public ResponseEntity<?> deleteteachingmode(@RequestParam long teachingModeId) {
         return tutorService.deleteteachingmode(teachingModeId);
     }
 
 //weekdetails
 
     @PostMapping("/weekTypes")
-    public ResponseEntity<?>addweektyp(@RequestBody WeekModel weekModel){
+    public ResponseEntity<?> addweektyp(@RequestBody WeekModel weekModel) {
         try {
             return tutorService.week(weekModel);
         } catch (Exception e) {
@@ -272,7 +295,7 @@ public class TutorController {
     @PutMapping("/updateWeek")
     public ResponseEntity<?> updateWeek(@RequestParam Long weekId, @RequestParam String week) {
         try {
-            return tutorService.updateweek(weekId,week);
+            return tutorService.updateweek(weekId, week);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,7 +303,7 @@ public class TutorController {
     }
 
     @DeleteMapping("/deleteweek")
-    public ResponseEntity<?>deleteweek(@RequestParam long weekId){
+    public ResponseEntity<?> deleteweek(@RequestParam long weekId) {
         return tutorService.deleteweek(weekId);
     }
 
@@ -290,7 +313,7 @@ public class TutorController {
     }
 
     @GetMapping(path = "/get/day/week/details")
-    public ResponseEntity<List<WeekDto>>getdayweekdetails(){
+    public ResponseEntity<List<WeekDto>> getdayweekdetails() {
         return tutorService.getDayFullDetails();
     }
 
@@ -298,7 +321,7 @@ public class TutorController {
     //daydetails
 
     @PostMapping("/addDays")
-    public ResponseEntity<?>adddays(@RequestBody DayModel dayModel){
+    public ResponseEntity<?> adddays(@RequestBody DayModel dayModel) {
         try {
             return tutorService.addDays(dayModel);
         } catch (Exception e) {
@@ -316,8 +339,9 @@ public class TutorController {
         }
         return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     @DeleteMapping("/deleteday")
-    public ResponseEntity<?>deleteday(@RequestParam long dayId){
+    public ResponseEntity<?> deleteday(@RequestParam long dayId) {
         return tutorService.deleteday(dayId);
     }
 
@@ -335,6 +359,7 @@ public class TutorController {
         }
         return new ResponseEntity<>("Somethng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     @GetMapping("/availability")
     public ResponseEntity<?> getAllAvailability() {
         try {
@@ -374,8 +399,7 @@ public class TutorController {
         }
     }
 
-
-
+//fetch courses....................................................
     @GetMapping("/getStreamSubDetailsByTutor/{tutorId}")
     public ResponseEntity<?> getStreamSubDetailsByTutor(@PathVariable Long tutorId) {
         try {
@@ -385,9 +409,20 @@ public class TutorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Something went wrong");
         }
+
+    }
+    @GetMapping("/getTutorbystream/{streamId}")
+    public ResponseEntity<List<TutordetailsDto>> getTutorByStream(@PathVariable Long streamId) {
+        try {
+            List<TutordetailsDto> tutors = tutorService.gettutorsByStream(streamId);
+            return new ResponseEntity<>(tutors, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-
+}
 
 //        List<StreamsubDto> streamsubDtoList = tutorService.getStreamSubDetailsByTutor(tutorId);
 
@@ -397,7 +432,7 @@ public class TutorController {
 
 //        return new ResponseEntity<>(streamsubDtoList, HttpStatus.OK);
 
-}
+
 
 
 

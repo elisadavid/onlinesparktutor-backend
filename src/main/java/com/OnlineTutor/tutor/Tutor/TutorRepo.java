@@ -22,4 +22,8 @@ public interface TutorRepo extends JpaRepository<TutorModel,Long> {
 
     @Query("SELECT t FROM TutorModel t WHERE t.tutor_id = :tutorId")
     List<TutorModel> findByTutorId(Long tutorId);
+
+    List<TutorModel> findByStreamId(Long streamId);
+
+
 }

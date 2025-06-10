@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path ="/api/User" )
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:8080")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -51,8 +51,8 @@ public class UserController {
         return new ResponseEntity<>("Smthng wnt wrng", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @DeleteMapping("/delete/user")
-    public ResponseEntity<?>deleteuser(@RequestParam Long userId){
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<?>deleteuser(@PathVariable Long userId){
         return userService.deleteuser(userId);
     }
 
@@ -64,8 +64,25 @@ public class UserController {
     }
 
 
+   //profile..................................
+   @GetMapping("/user/profile/{userId}")
+   public ResponseEntity<UserproDto> getUserprofile(@PathVariable Long userId) {
+       UserproDto userproDto = userService.getUserprofileById(userId);
+       return ResponseEntity.ok(userproDto);
+   }
 
 
+//    updation profile
+
+    @PutMapping("/update/profile/{userId}")
+    public ResponseEntity<String> updateProfile(@PathVariable Long userId, @RequestBody UserproDto dto) {
+        boolean updated = userService.updateUserProfile(userId, dto);
+        if (updated) {
+            return ResponseEntity.ok("user profile updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
+        }
+    }
 
     @GetMapping("/genderlist")
     public ResponseEntity<List<GenderModel>> getgenderlist() {
@@ -146,6 +163,10 @@ public class UserController {
 //            return new ResponseEntity<>("No users found for streamId: " + streamId, HttpStatus.NOT_FOUND);
 //        }
 //    }
+
+
+    //fetchUsers..............................................
+
            @GetMapping("/users/stream")
         public ResponseEntity<?> getUsersByStreamId(@RequestParam Long streamId, @RequestParam Long tutorId) {
     try {
@@ -154,4 +175,5 @@ public class UserController {
         return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
     }
 }
+
        }

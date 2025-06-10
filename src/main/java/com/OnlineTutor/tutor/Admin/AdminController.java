@@ -132,6 +132,8 @@ public class AdminController {
         return new ResponseEntity<>("smthng wnt wrong", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
+    //fetchStream......................................
     @GetMapping("/get/stream")
     public ResponseEntity<List<StreamModel>> getStreamList() {
         return adminService.getstream();
@@ -152,10 +154,13 @@ public class AdminController {
         return adminService.deletestream(streamId);
     }
 
-    @GetMapping(path = "/getStreamFullDetails")
-    public ResponseEntity<List<StreamDto>> getStreamFullDetails() {
-        return adminService.getStreamFullDetails();
+    @GetMapping("/getStreamDetails/{streamId}")
+    public ResponseEntity<StreamDto> getStreamDetailsById(@PathVariable Long streamId) {
+        return adminService.getStreamDetailsById(streamId);
     }
+
+
+
 
     //subject
     @PostMapping("/add/subjects")

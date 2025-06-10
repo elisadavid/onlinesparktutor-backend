@@ -1,6 +1,9 @@
 package com.OnlineTutor.tutor.Tutor.Education.stream;
 
+import com.OnlineTutor.tutor.Tutor.TutorInfoDto;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class StreamDto {
@@ -8,27 +11,12 @@ public class StreamDto {
     private String streamName;
     private Long educationLevelId;
     private String educationLevel;
-    private Long tutorId;
 
-    public Long getTutorId() {
-        return tutorId;
-    }
+    private List<String> subjectName;  // List of subjects
+    private List<String> name;         // List of tutor names
+    private int numberOfStudents;// Total students in the stream
 
-    public void setTutorId(Long tutorId) {
-        this.tutorId = tutorId;
-    }
-
-
-
-    public String getEducationLevel() {
-        return educationLevel;
-    }
-
-    public void setEducationLevel(String educationLevel) {
-        this.educationLevel = educationLevel;
-    }
-
-
+    private List<TutorInfoDto> tutors;
 
     public Long getStreamId() {
         return streamId;
@@ -52,5 +40,45 @@ public class StreamDto {
 
     public void setEducationLevelId(Long educationLevelId) {
         this.educationLevelId = educationLevelId;
+    }
+
+    public String getEducationLevel() {
+        return educationLevel;
+    }
+
+    public void setEducationLevel(String educationLevel) {
+        this.educationLevel = educationLevel;
+    }
+
+    public List<String> getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(List<String> subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public List<String> getName() {
+        return name;
+    }
+
+    public void setName(List<String> name) {
+        this.name = name;
+    }
+
+    public int getNumberOfStudents() {
+        return numberOfStudents;
+    }
+
+    public void setNumberOfStudents(int numberOfStudents) {
+        this.numberOfStudents = numberOfStudents;
+    }
+
+    public List<TutorInfoDto> getTutors() {
+        return tutors;
+    }
+
+    public void setTutors(List<TutorInfoDto> tutors) {
+        this.tutors = tutors;
     }
 }

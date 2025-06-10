@@ -11,13 +11,40 @@ public class ProfileDto {
     private String Phn_no;
     private String qualification;
     private String subject;
+    private Long teachingModeId;
     private String teachingMode;
     private String status;
     private String gender;
     private String location;
     private byte[] qualificationCertificate;
-    private String stream;
+    private String streamName;
     private String educationLevel;
+    private String experience;
+    private Long rating;
+
+    public Long getRating() {
+        return rating;
+    }
+
+    public void setRating(Long rating) {
+        this.rating = rating;
+    }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    public Long getTeachingModeId() {
+        return teachingModeId;
+    }
+
+    public void setTeachingModeId(Long teachingModeId) {
+        this.teachingModeId = teachingModeId;
+    }
 
     public Long getTutor_id() {
         return tutor_id;
@@ -107,12 +134,12 @@ public class ProfileDto {
         this.qualificationCertificate = qualificationCertificate;
     }
 
-    public String getStream() {
-        return stream;
+    public String getStreamName() {
+        return streamName;
     }
 
-    public void setStream(String stream) {
-        this.stream = stream;
+    public void setStreamName(String streamName) {
+        this.streamName = streamName;
     }
 
     public String getEducationLevel() {
@@ -122,5 +149,7 @@ public class ProfileDto {
     public void setEducationLevel(String educationLevel) {
         this.educationLevel = educationLevel;
     }
+
+
 }
 

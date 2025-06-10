@@ -33,20 +33,14 @@ public class TutorModel {
     @Column (name = "genderType")
     private String genderType;
 
-    @Column(name = "qualificationId")
+
     private Long qualificationId;
 
-    @Column(name = "qualification")
     private String qualification;
 
     @Column(name = "Experience")
-    private Long Experience;
+    private Long experience;
 
-
-
-
-//    @Column(name = "degree")
-//    private String degree;//null
 
     @Column(name = "location")
     private String location;
@@ -55,23 +49,44 @@ public class TutorModel {
     @Column(name = "qualificationCertificate")
     private byte[] qualificationCertificate;
 
-    @Column(name = "teachingModeId")
+
     private Long teachingModeId;
+    private String teachingMode;
 
     @Column(name = "statusId")
     private Long statusId;
 
+
     private Long subjectId;
-    @Column(name = "subjectName")
+
+
     private String subjectName;
-//
+
+
     private Long streamId;
 
-    @Column(name = "streamName")
     private String streamName;
+
 
     @Column(name = "Rating")
     private Long Rating;
+
+
+    public String getTeachingMode() {
+        return teachingMode;
+    }
+
+    public void setTeachingMode(String teachingMode) {
+        this.teachingMode = teachingMode;
+    }
+
+    public Long getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Long experience) {
+        this.experience = experience;
+    }
 
     public String getGenderType() {
         return genderType;
@@ -89,13 +104,7 @@ public class TutorModel {
         this.qualification = qualification;
     }
 
-    public Long getExperience() {
-        return Experience;
-    }
 
-    public void setExperience(Long experience) {
-        Experience = experience;
-    }
 
     public String getSubjectName() {
         return subjectName;
@@ -130,13 +139,9 @@ public class TutorModel {
     }
 
 
-    public Long getSubjectId() {
-        return subjectId;
-    }
+    public Long getSubjectId() { return subjectId; }
 
-    public void setSubjectId(Long subjectId) {
-        this.subjectId = subjectId;
-    }
+    public void setSubjectId(Long subjectId) {this.subjectId = subjectId;}
 
     public Long getTutor_id() {
         return tutor_id;

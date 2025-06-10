@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 @CrossOrigin
 @Entity
 @Table(name = "user_tb")
@@ -38,17 +36,48 @@ public class UserModel {
     @Column(name = "educationLevelId")
     private Long educationLevelId;
 
-    @Column(name = "teachingModeId")
+
     private Long teachingModeId;
+
+    private String teachingMode;
 
     @Column(name = "weekId")
     private Long weekId;
 
+
+
     @Column(name = "SpecificGoalId")
     private Long SpecificGoalId;
 
+    private Long genderId;
+
     private Long tutorId;
     private Long streamId;
+    private String streamName;
+
+    public String getTeachingMode() {
+        return teachingMode;
+    }
+
+    public void setTeachingMode(String teachingMode) {
+        this.teachingMode = teachingMode;
+    }
+
+    public String getStreamName() {
+        return streamName;
+    }
+
+    public void setStreamName(String streamName) {
+        this.streamName = streamName;
+    }
+
+    public Long getGenderId() {
+        return genderId;
+    }
+
+    public void setGenderId(Long genderId) {
+        this.genderId = genderId;
+    }
 
     public Long getTutorId() {
         return tutorId;

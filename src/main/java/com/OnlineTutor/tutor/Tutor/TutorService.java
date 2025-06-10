@@ -1,6 +1,7 @@
 package com.OnlineTutor.tutor.Tutor;
 
 import com.OnlineTutor.tutor.Admin.status.StatusRepo;
+import com.OnlineTutor.tutor.Tutor.Education.stream.StreamModel;
 import com.OnlineTutor.tutor.Tutor.Education.stream.StreamRepo;
 import com.OnlineTutor.tutor.Tutor.Education.stream.StreamsubDto;
 import com.OnlineTutor.tutor.Tutor.Education.subject.SubjectModel;
@@ -31,10 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,6 +84,7 @@ public class TutorService {
         tutorModel1.setExperience(tutorModel.getExperience());
         tutorModel1.setStreamName(tutorModel.getStreamName());
         tutorModel1.setSubjectName(tutorModel.getSubjectName());
+        tutorModel1.setLocation(tutorModel.getLocation());
 
         tutorRepo.save(tutorModel1);
         return new ResponseEntity<>(tutorModel1, HttpStatus.OK);
@@ -529,7 +528,10 @@ public ResponseEntity<List<TimeslotDto>> getschedulingtimelist() {
         availableModel1.setSubjectId(availableModel.getSubjectId());
         availableModel1.setStreamId(availableModel.getStreamId());
         availableModel1.setTutorId(availableModel.getTutorId());
-        availableModel1.setDayId(availableModel1.getDayId());
+        availableModel1.setDayId(availableModel.getDayId());
+        availableModel1.setExperience(availableModel.getExperience());
+        availableModel1.setLocation(availableModel.getLocation());
+
 
         availableRepo.save(availableModel1);
 
@@ -540,6 +542,7 @@ public ResponseEntity<List<TimeslotDto>> getschedulingtimelist() {
             TutorModel tutor = optionalTutor.get();
             tutor.setStreamId(availableModel.getStreamId());
             tutor.setSubjectId(availableModel.getSubjectId());
+            tutor.setLocation(availableModel1.getLocation());
             tutorRepo.save(tutor);  // updates existing tutor
         } else {
             return new ResponseEntity<>("Tutor not found", HttpStatus.NOT_FOUND);
@@ -694,8 +697,16 @@ public ResponseEntity<?> getAllAvailability() {
             } else {
                 dto.setSubjectName("Unknown Subject");
             }
+
+            StreamModel streamModel = streamRepo.findById(tutorModel.getStreamId()).orElse(null);
+            if (streamModel != null) {
             // Optional: If you have streamName via relation
-            // dto.setStreamName(subjectModel.getStream().getStreamName());
+             dto.setStreamName(streamModel.getStreamName());
+            } else {
+                dto.setStreamName("Unknown stream");
+            }
+
+
 
             streamsubDtoList.add(dto);
         }
@@ -712,6 +723,172 @@ public ResponseEntity<?> getAllAvailability() {
         }
         return new ResponseEntity<>("id not found",HttpStatus.NOT_FOUND);
     }
+//    public List<TutordetailsDto> gettutorsByStream(Long streamId) {
+//        List<TutordetailsDto> tutordetailsDtoList = new ArrayList<>();
+//        List<TutorModel> tutorModelList = tutorRepo.findByStreamId(streamId);
+//
+//        for (TutorModel tutorModel : tutorModelList) {
+//            if (streamId.equals(tutorModel.getStreamId())) {
+//                TutordetailsDto tutordetailsDto = new TutordetailsDto();
+//                tutordetailsDto.setTutorId(tutorModel.getTutor_id());
+//                tutordetailsDto.setName(tutorModel.getName());
+//                tutordetailsDto.setEmail(tutorModel.getEmail());
+//                tutordetailsDto.setPhn_no(tutorModel.getPhn_no());
+//                tutordetailsDto.setQualification(tutorModel.getQualification());
+//                tutordetailsDto.setLocation(tutorModel.getLocation());
+//                tutordetailsDto.setExperience(tutorModel.getExperience());
+//
+//                // Teaching Mode
+//                Optional<TeachingmodeModel> optionalTeachingmodeModel = teachingmodeRepo.findById(tutorModel.getTeachingModeId());
+//                tutordetailsDto.setTeachingMode(optionalTeachingmodeModel.map(TeachingmodeModel::getTeachingMode).orElse("Not Specified"));
+//                tutordetailsDto.setTeachingModeId(tutorModel.getTeachingModeId());
+//
+//                // Subject & Stream
+//                Optional<SubjectModel>optionalSubjectModel=subjectRepo.findById(tutorModel.getSubjectId());
+//                tutordetailsDto.setSubjectId(tutorModel.getSubjectId());
+//                tutordetailsDto.setSubjectName(optionalSubjectModel.map(tutorModel.getSubjectName());
+//
+//                tutordetailsDto.setStreamId(tutorModel.getStreamId());
+//                tutordetailsDto.setStreamName(tutorModel.getStreamName());
+//
+//
+//
+//                tutordetailsDtoList.add(tutordetailsDto);
+//            }
+//        }
+//        return tutordetailsDtoList;
+//    }
+
+
+    public List<TutordetailsDto> gettutorsByStream(Long streamId) {
+        List<TutordetailsDto> tutordetailsDtoList = new ArrayList<>();
+        List<TutorModel> tutorModelList = tutorRepo.findAll();
+
+        for (TutorModel tutorModel : tutorModelList) {
+            if (streamId.equals(tutorModel.getStreamId())) {
+                TutordetailsDto tutordetailsDto = new TutordetailsDto();
+
+                tutordetailsDto.setTutorId(tutorModel.getTutor_id());
+                tutordetailsDto.setName(tutorModel.getName());
+                tutordetailsDto.setEmail(tutorModel.getEmail());
+                tutordetailsDto.setPhn_no(tutorModel.getPhn_no());
+                tutordetailsDto.setQualification(tutorModel.getQualification());
+                tutordetailsDto.setStreamId(tutorModel.getStreamId());
+                tutordetailsDto.setSubjectId(tutorModel.getSubjectId());
+                tutordetailsDto.setTeachingModeId(tutorModel.getTeachingModeId());
+
+                // Get Teaching Mode Name
+                teachingmodeRepo.findById(tutorModel.getTeachingModeId()).ifPresentOrElse(
+                        mode -> tutordetailsDto.setTeachingMode(mode.getTeachingMode()),
+                        () -> tutordetailsDto.setTeachingMode("Not specified")
+                );
+
+                // Get Subject Name
+                subjectRepo.findById(tutorModel.getSubjectId()).ifPresentOrElse(
+                        subject -> tutordetailsDto.setSubjectName(subject.getSubjectName()),
+                        () -> tutordetailsDto.setSubjectName("Unknown Subject")
+                );
+
+                // Get Stream Name
+                streamRepo.findById(tutorModel.getStreamId()).ifPresentOrElse(
+                        stream -> tutordetailsDto.setStreamName(stream.getStreamName()),
+                        () -> tutordetailsDto.setStreamName("Unknown Stream")
+                );
+
+                // Optional: Set defaults for missing data
+                tutordetailsDto.setLocation(
+                        tutorModel.getLocation() != null ? tutorModel.getLocation() : "Not specified"
+                );
+                tutordetailsDto.setExperience(
+                        tutorModel.getExperience() != null ? tutorModel.getExperience() : 0
+                );
+
+                tutordetailsDtoList.add(tutordetailsDto);
+            }
+        }
+
+        return tutordetailsDtoList;
+    }
+
+
+
+    public boolean updateTutorProfile(Long tutorId, ProfileDto dto) {
+        Optional<TutorModel> optional = tutorRepo.findById(tutorId);
+        if (!optional.isPresent()) {
+            return false;
+        }
+
+        TutorModel tutor = optional.get();
+
+        tutor.setName(dto.getName());
+        tutor.setEmail(dto.getEmail());
+        tutor.setPhn_no(dto.getPhn_no());
+        tutor.setLocation(dto.getLocation());
+        tutor.setQualification(dto.getQualification());
+        tutor.setSubjectName(dto.getSubject());
+        tutor.setTeachingMode(dto.getTeachingMode());
+//        tutor.setStatus(dto.getStatus());
+        tutor.setGenderType(dto.getGender());
+        tutor.setQualificationCertificate(dto.getQualificationCertificate());
+        tutor.setStreamName(dto.getStreamName());
+//        tutor.setExperience(dto.getExperience());
+        tutor.setRating(dto.getRating());
+
+        tutorRepo.save(tutor);
+        return true;
+    }
+
+
+
+//    public List<TutordetailsDto> gettutorsByStream(Long streamId) {
+//        List<TutorModel> tutors = tutorRepo.findByStreamId(streamId);  // This must exist
+////        List<TutorModel> tutors = tutorRepo.findAll();
+//        List<TutordetailsDto> tutorDetailsList = new ArrayList<>();
+//
+//        for (TutorModel tutor : tutors) {
+//            // Basic null checks for required fields
+//            if (tutor.getName() == null || tutor.getEmail() == null || tutor.getPhn_no() == null ||
+//                    tutor.getExperience() == null || tutor.getLocation() == null ||
+//                    tutor.getSubjectId() == null || tutor.getStreamId() == null || tutor.getTeachingModeId() == null) {
+//                continue; // Skip this tutor if any required field is missing
+//            }
+//
+//            // Fetch subject
+//            SubjectModel subject = subjectRepo.findById(tutor.getSubjectId()).orElse(null);
+//            if (subject == null) continue;
+//
+//            // Fetch stream
+//            StreamModel stream = streamRepo.findById(tutor.getStreamId()).orElse(null);
+//            if (stream == null) continue;
+//
+//            // Fetch teaching mode
+//            TeachingmodeModel mode = teachingmodeRepo.findById(tutor.getTeachingModeId()).orElse(null);
+//            if (mode == null) continue;
+//
+//            // Build DTO
+//            TutordetailsDto dto = new TutordetailsDto();
+//            dto.setTutorId(tutor.getTutor_id());
+//            dto.setName(tutor.getName());
+//            dto.setEmail(tutor.getEmail());
+//            dto.setPhn_no(tutor.getPhn_no());
+//            dto.setExperience(tutor.getExperience());
+//            dto.setLocation(tutor.getLocation());
+//            dto.setSubjectId(tutor.getSubjectId());
+//            dto.setStreamId(tutor.getStreamId());
+//            dto.setTeachingModeId(tutor.getTeachingModeId());
+//
+//            dto.setSubjectName(subject.getSubjectName());
+//            dto.setStreamName(stream.getStreamName());
+//            dto.setTeachingMode(mode.getTeachingMode());
+//
+//            tutorDetailsList.add(dto);
+//        }
+//
+//        return tutorDetailsList;
+//    }
+
+
+
 }
 
 
